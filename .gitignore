@@ -6,7 +6,8 @@ out
 *.tgz
 
 # code coverage
-coverage
+coverage/
+!src/coverage/
 *.lcov
 
 # logs
