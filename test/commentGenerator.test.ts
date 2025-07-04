@@ -15,6 +15,14 @@ describe("generateCoverageComment", () => {
       statements: { total: 50, covered: 40, skipped: 10, pct: 80 },
       functions: { total: 10, covered: 9, skipped: 1, pct: 90 },
       branches: { total: 20, covered: 16, skipped: 4, pct: 80 },
+      uncoveredLines: [5, 10, 15, 20, 25, 30, 35, 40, 45, 50],
+    },
+    "src/utils.ts": {
+      lines: { total: 30, covered: 30, skipped: 0, pct: 100 },
+      statements: { total: 30, covered: 30, skipped: 0, pct: 100 },
+      functions: { total: 5, covered: 5, skipped: 0, pct: 100 },
+      branches: { total: 10, covered: 10, skipped: 0, pct: 100 },
+      uncoveredLines: [],
     },
   };
 
@@ -83,5 +91,69 @@ describe("generateCoverageComment", () => {
     
     // Should contain both green (pass) and red (fail) status indicators
     expect(result).toMatch(/🔴|❌|🟢|✅/);
+  });
+
+  it("should include file coverage section by default", () => {
+    const result = generateCoverageComment(mockJsonSummary);
+    
+    expect(result).toContain("📁 File Coverage");
+    expect(result).toContain("<details>");
+    expect(result).toContain("<summary>");
+    expect(result).toContain("src/example.ts");
+    expect(result).toContain("src/utils.ts");
+    expect(result).toContain("Uncovered Lines");
+  });
+
+  it("should hide file coverage when showFileCoverage is false", () => {
+    const result = generateCoverageComment(mockJsonSummary, { showFileCoverage: false });
+    
+    expect(result).not.toContain("📁 File Coverage");
+    expect(result).not.toContain("<details>");
+    expect(result).not.toContain("src/example.ts");
+  });
+
+  it("should limit files displayed with maxFiles option", () => {
+    const result = generateCoverageComment(mockJsonSummary, { maxFiles: 1 });
+    
+    expect(result).toContain("📁 File Coverage (1 files)");
+    // Should contain at least one file but not necessarily both
+    const containsExample = result.includes("src/example.ts");
+    const containsUtils = result.includes("src/utils.ts");
+    expect(containsExample || containsUtils).toBe(true);
+    expect(containsExample && containsUtils).toBe(false);
+  });
+
+  it("should format uncovered lines correctly", () => {
+    const result = generateCoverageComment(mockJsonSummary);
+    
+    // Should contain uncovered lines for example.ts
+    expect(result).toContain("5, 10, 15, 20, 25");
+    // Should show dash for files with no uncovered lines
+    expect(result).toMatch(/\|\s*-\s*\|/); // Match dash in table cell
+  });
+
+  it("should use emoji indicators for coverage percentages", () => {
+    const result = generateCoverageComment(mockJsonSummary);
+    
+    // Should contain emoji indicators
+    expect(result).toMatch(/🟢|🟡|🔴/);
+  });
+
+  it("should truncate long file paths", () => {
+    const longPathSummary: JsonSummary = {
+      total: mockJsonSummary.total,
+      "src/very/deep/nested/directory/structure/with/a/really/long/file/path/example.ts": {
+        lines: { total: 10, covered: 5, skipped: 5, pct: 50 },
+        statements: { total: 10, covered: 5, skipped: 5, pct: 50 },
+        functions: { total: 2, covered: 1, skipped: 1, pct: 50 },
+        branches: { total: 4, covered: 2, skipped: 2, pct: 50 },
+        uncoveredLines: [1, 2, 3, 4, 5],
+      },
+    };
+    
+    const result = generateCoverageComment(longPathSummary);
+    
+    // Should contain truncated path with ellipsis
+    expect(result).toContain("...");
   });
 });
