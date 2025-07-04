@@ -1,5 +1,5 @@
 name: 'Bun Coverage Report'
-description: 'Generate coverage reports from Bun test LCOV output and comment on Pull Requests'
+description: 'Generate and post coverage reports from Bun test LCOV output directly to your Pull Requests. Compatible with vitest-coverage-report-action UI and includes configurable coverage thresholds.'
 author: 'yoshida_nao'
 
 inputs:
