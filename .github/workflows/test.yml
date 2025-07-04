@@ -20,24 +20,42 @@ jobs:
       - name: Setup Bun
         uses: oven-sh/setup-bun@v2
         with:
-          bun-version: "1.2.x"
+          bun-version: "latest"
       
       - name: Install dependencies
-        run: bun install --frozen-lockfile
+        run: |
+          echo "📦 Installing dependencies..."
+          bun install --frozen-lockfile
+          echo "✅ Dependencies installed successfully"
       
       - name: Run tests with coverage
-        run: bun test --coverage --coverage-reporter=lcov --coverage-dir=coverage
+        run: |
+          echo "🧪 Running tests with coverage..."
+          bun test --coverage --coverage-reporter=lcov --coverage-dir=coverage
+          echo "✅ Tests completed successfully"
       
       - name: Verify coverage files
         run: |
           echo "📁 Checking coverage directory contents:"
-          ls -la coverage/ || echo "❌ Coverage directory not found"
+          if [ -d "coverage" ]; then
+            ls -la coverage/
+            echo "✅ Coverage directory found"
+          else
+            echo "❌ Coverage directory not found"
+            exit 1
+          fi
           echo ""
           echo "📄 LCOV file contents (first 20 lines):"
-          head -20 coverage/lcov.info || echo "❌ LCOV file not found"
+          if [ -f "coverage/lcov.info" ]; then
+            head -20 coverage/lcov.info
+            echo "✅ LCOV file found"
+          else
+            echo "❌ LCOV file not found"
+            exit 1
+          fi
           echo ""
           echo "📊 Coverage directory size:"
-          du -sh coverage/ || echo "❌ Cannot check directory size"
+          du -sh coverage/
       
       - name: Test Coverage Report Action
         uses: ./
@@ -47,7 +65,7 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
       
       - name: Upload coverage files as artifacts
-        if: always()
+        if: always() && hashFiles('coverage/**') != ''
         uses: actions/upload-artifact@v4
         with:
           name: coverage-files
