@@ -28,9 +28,28 @@ jobs:
       - name: Run tests with coverage
         run: bun test --coverage --coverage-reporter=lcov --coverage-dir=coverage
       
+      - name: Verify coverage files
+        run: |
+          echo "📁 Checking coverage directory contents:"
+          ls -la coverage/ || echo "❌ Coverage directory not found"
+          echo ""
+          echo "📄 LCOV file contents (first 20 lines):"
+          head -20 coverage/lcov.info || echo "❌ LCOV file not found"
+          echo ""
+          echo "📊 Coverage directory size:"
+          du -sh coverage/ || echo "❌ Cannot check directory size"
+      
       - name: Test Coverage Report Action
         uses: ./
         with:
           lcov-path: coverage/lcov.info
           min-coverage: 80
           github-token: ${{ secrets.GITHUB_TOKEN }}
+      
+      - name: Upload coverage files as artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-files
+          path: coverage/
+          retention-days: 7

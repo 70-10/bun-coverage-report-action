@@ -1,0 +1,8 @@
+[test]
+# Coverage configuration
+coverage = true
+coverageReporter = ["lcov", "text"]
+coverageDir = "coverage"
+
+# Test configuration
+testTimeout = 30000
