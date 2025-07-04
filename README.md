@@ -86,6 +86,10 @@ This project was built using Test-Driven Development (TDD) with the Red-Green-Re
 2. **GREEN**: Implement minimal code to pass tests  
 3. **REFACTOR**: Clean up and optimize code
 
+## Testing
+
+The action has been tested with TDD methodology and includes comprehensive test coverage.
+
 ## License
 
 MIT
