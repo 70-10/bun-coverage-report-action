@@ -75,4 +75,67 @@ describe("parseLcov", () => {
     expect(result.total.lines.covered).toBe(0);
     expect(result.total.lines.pct).toBe(0);
   });
+
+  it("should parse DA lines correctly for accurate coverage calculation", async () => {
+    const daLcovPath = join(__dirname, "fixtures", "lcov-with-da.info");
+    const result = await parseLcov(daLcovPath);
+    
+    // Based on DA lines:
+    // src/example.ts: 10 total lines, 8 covered (lines 1,2,3,4,7,8,9,10), 2 uncovered (lines 5,6)
+    // src/utils.ts: 5 total lines, 5 covered (lines 1,2,3,4,5)
+    // Total: 15 lines, 13 covered = 86.67%
+    
+    expect(result.total.lines.total).toBe(15);
+    expect(result.total.lines.covered).toBe(13);
+    expect(result.total.lines.pct).toBeCloseTo(86.67, 2);
+    
+    // Check individual files
+    const exampleFile = result["src/example.ts"];
+    expect(exampleFile.lines.total).toBe(10);
+    expect(exampleFile.lines.covered).toBe(8);
+    expect(exampleFile.lines.pct).toBeCloseTo(80.0, 2);
+    expect(exampleFile.uncoveredLines).toEqual([5, 6]);
+    
+    const utilsFile = result["src/utils.ts"];
+    expect(utilsFile.lines.total).toBe(5);
+    expect(utilsFile.lines.covered).toBe(5);
+    expect(utilsFile.lines.pct).toBeCloseTo(100.0, 2);
+    expect(utilsFile.uncoveredLines).toEqual([]);
+  });
+
+  it("should handle LCOV file with realistic coverage data similar to bun output", async () => {
+    // Create a test file that simulates the current project's coverage structure
+    const realisticLcovPath = join(__dirname, "fixtures", "realistic-lcov.info");
+    const realisticContent = `TN:
+SF:src/index.ts
+FNF:4
+FNH:4
+DA:1,5
+DA:2,5
+DA:3,3
+DA:4,3
+DA:5,2
+DA:6,2
+DA:7,1
+DA:8,1
+DA:9,1
+LF:9
+LH:9
+end_of_record`;
+    
+    await Bun.write(realisticLcovPath, realisticContent);
+    
+    const result = await parseLcov(realisticLcovPath);
+    
+    // All 9 DA lines have hit count > 0, so coverage should be 100%
+    expect(result.total.lines.total).toBe(9);
+    expect(result.total.lines.covered).toBe(9);
+    expect(result.total.lines.pct).toBe(100);
+    
+    const indexFile = result["src/index.ts"];
+    expect(indexFile.lines.total).toBe(9);
+    expect(indexFile.lines.covered).toBe(9);
+    expect(indexFile.lines.pct).toBe(100);
+    expect(indexFile.uncoveredLines).toEqual([]);
+  });
 });
