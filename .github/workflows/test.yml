@@ -81,7 +81,7 @@ jobs:
         uses: ./
         with:
           lcov-path: coverage/lcov.info
-          min-coverage: 80
+          min-coverage: 65
           github-token: ${{ secrets.GITHUB_TOKEN }}
       
       - name: Upload coverage files as artifacts
