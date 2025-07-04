@@ -1,6 +1,6 @@
 {
   "name": "bun-coverage-report-action",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "GitHub Action to generate coverage reports from Bun test LCOV output",
   "main": "dist/index.js",
   "type": "module",

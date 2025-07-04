@@ -42,7 +42,7 @@ jobs:
         run: bun test --coverage --coverage-reporter=lcov --coverage-dir=coverage
 
       - name: Coverage Report
-        uses: 70-10/bun-coverage-report-action@v1
+        uses: 70-10/bun-coverage-report-action@v1.0.3
         with:
           lcov-path: coverage/lcov.info
           min-coverage: 80
@@ -54,14 +54,14 @@ jobs:
 
 ```yaml
 - name: Coverage Report
-  uses: 70-10/bun-coverage-report-action@v1
+  uses: 70-10/bun-coverage-report-action@v1.0.3
 ```
 
 ### With Coverage Threshold
 
 ```yaml
 - name: Coverage Report
-  uses: 70-10/bun-coverage-report-action@v1
+  uses: 70-10/bun-coverage-report-action@v1.0.3
   with:
     min-coverage: 90
     lcov-path: coverage/lcov.info
@@ -71,14 +71,14 @@ jobs:
 
 ```yaml
 - name: Unit Test Coverage
-  uses: 70-10/bun-coverage-report-action@v1
+  uses: 70-10/bun-coverage-report-action@v1.0.3
   with:
     name: "Unit Tests"
     lcov-path: coverage/unit/lcov.info
     min-coverage: 85
 
 - name: Integration Test Coverage
-  uses: 70-10/bun-coverage-report-action@v1
+  uses: 70-10/bun-coverage-report-action@v1.0.3
   with:
     name: "Integration Tests"
     lcov-path: coverage/integration/lcov.info
