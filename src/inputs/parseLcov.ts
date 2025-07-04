@@ -66,12 +66,30 @@ function convertRecordToReport(record: any): CoverageReport {
   const branchesTotal = record.branches?.found || 0;
   const branchesCovered = record.branches?.hit || 0;
 
+  // Extract uncovered lines
+  const uncoveredLines = extractUncoveredLines(record);
+
   return {
     lines: createReportNumbers(linesTotal, linesCovered),
     statements: createReportNumbers(linesTotal, linesCovered), // LCOV doesn't distinguish lines from statements
     functions: createReportNumbers(functionsTotal, functionsCovered),
     branches: createReportNumbers(branchesTotal, branchesCovered),
+    uncoveredLines,
   };
+}
+
+function extractUncoveredLines(record: any): number[] {
+  const uncovered: number[] = [];
+  
+  if (record.lines?.details) {
+    for (const detail of record.lines.details) {
+      if (detail.hit === 0) {
+        uncovered.push(detail.line);
+      }
+    }
+  }
+  
+  return uncovered.sort((a, b) => a - b);
 }
 
 function createReportNumbers(total: number, covered: number): ReportNumbers {

@@ -10,6 +10,7 @@ export type CoverageReport = {
   statements: ReportNumbers;
   functions: ReportNumbers;
   branches: ReportNumbers;
+  uncoveredLines?: number[];
 };
 
 export type JsonSummary = {
