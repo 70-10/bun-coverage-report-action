@@ -31,33 +31,53 @@ jobs:
       - name: Run tests with coverage
         run: |
           echo "🧪 Running tests with coverage..."
-          bun test --coverage --coverage-reporter=lcov --coverage-dir=coverage
+          bun test --coverage --coverage-reporter=lcov
           echo "✅ Tests completed successfully"
       
       - name: Verify coverage files
         run: |
           echo "📁 Checking coverage directory contents:"
+          echo "Working directory: $(pwd)"
+          echo "All files in current directory:"
+          ls -la
+          echo ""
+          
+          # Check default coverage locations
           if [ -d "coverage" ]; then
+            echo "✅ coverage/ directory found:"
             ls -la coverage/
-            echo "✅ Coverage directory found"
           else
-            echo "❌ Coverage directory not found"
-            exit 1
+            echo "❌ coverage/ directory not found"
           fi
+          
           echo ""
-          echo "📄 LCOV file contents (first 20 lines):"
+          echo "🔍 Searching for LCOV files:"
+          find . -name "*.lcov" -o -name "lcov.info" 2>/dev/null || echo "No LCOV files found"
+          
+          echo ""
+          echo "📄 Checking specific LCOV file:"
           if [ -f "coverage/lcov.info" ]; then
-            head -20 coverage/lcov.info
-            echo "✅ LCOV file found"
+            echo "✅ coverage/lcov.info found"
+            head -10 coverage/lcov.info
           else
-            echo "❌ LCOV file not found"
-            exit 1
+            echo "❌ coverage/lcov.info not found"
+            echo "Looking for alternative locations..."
+            # Check for lcov.info in root
+            if [ -f "lcov.info" ]; then
+              echo "✅ Found lcov.info in root directory"
+              head -10 lcov.info
+              # Move to expected location
+              mkdir -p coverage
+              mv lcov.info coverage/
+              echo "📋 Moved lcov.info to coverage/ directory"
+            else
+              echo "❌ No LCOV file found in any location"
+              exit 1
+            fi
           fi
-          echo ""
-          echo "📊 Coverage directory size:"
-          du -sh coverage/
       
       - name: Test Coverage Report Action
+        if: success() && hashFiles('coverage/lcov.info') != ''
         uses: ./
         with:
           lcov-path: coverage/lcov.info
