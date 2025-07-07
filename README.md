@@ -89,43 +89,24 @@ jobs:
 
 | Input               | Description                                                       | Default               | Required |
 | ------------------- | ----------------------------------------------------------------- | --------------------- | -------- |
-| `lcov-path`         | Path to the LCOV coverage file                                    | `coverage/lcov.info`  | ❌       |
-| `min-coverage`      | Minimum coverage threshold (%). Action fails if below this value  | `0`                   | ❌       |
-| `github-token`      | GitHub token for posting PR comments                              | `${{ github.token }}` | ❌       |
-| `working-directory` | Working directory to look for coverage files                      | `./`                  | ❌       |
-| `name`              | Name for the coverage report (useful for multiple reports)        | `""`                  | ❌       |
-| `pr-number`         | Pull request number to comment on (auto-detected if not provided) | `""`                  | ❌       |
+| `lcov-path`         | Path to the LCOV coverage file                                    | `coverage/lcov.info`  | No       |
+| `min-coverage`      | Minimum coverage threshold (%). Action fails if below this value  | `0`                   | No       |
+| `github-token`      | GitHub token for posting PR comments                              | `${{ github.token }}` | No       |
+| `working-directory` | Working directory to look for coverage files                      | `./`                  | No       |
+| `name`              | Name for the coverage report (useful for multiple reports)        | `""`                  | No       |
+| `pr-number`         | Pull request number to comment on (auto-detected if not provided) | `""`                  | No       |
 
 ## 🔧 Setup Your Bun Project
 
-1. **Install Bun** (if not already installed):
+Configure your test script in `package.json`:
 
-   ```bash
-   curl -fsSL https://bun.sh/install | bash
-   ```
-
-2. **Configure your test script** in `package.json`:
-
-   ```json
-   {
-     "scripts": {
-       "test": "bun test",
-       "test:coverage": "bun test --coverage --coverage-reporter=lcov --coverage-dir=coverage"
-     }
-   }
-   ```
-
-3. **Add test files** following Bun's conventions (`.test.ts`, `.spec.ts`):
-
-   ```typescript
-   // math.test.ts
-   import { expect, test } from "bun:test";
-   import { add } from "./math";
-
-   test("adds 1 + 2 to equal 3", () => {
-     expect(add(1, 2)).toBe(3);
-   });
-   ```
+```json
+{
+  "scripts": {
+    "test:coverage": "bun test --coverage --coverage-reporter=lcov --coverage-dir=coverage"
+  }
+}
+```
 
 ## 🎯 Coverage Thresholds
 
@@ -150,52 +131,9 @@ with:
 - ✅ **Monorepos** (with `working-directory`)
 - ✅ **vitest-coverage-report-action** UI compatibility
 
-## 🛠️ Development
-
-### Prerequisites
-
-- [Bun](https://bun.sh) 1.0+
-- Node.js 20+ (for GitHub Actions runtime)
-
-### Local Development
-
-```bash
-# Clone the repository
-git clone https://github.com/70-10/bun-coverage-report-action.git
-cd bun-coverage-report-action
-
-# Install dependencies
-bun install
-
-# Run tests
-bun test
-
-# Run tests with coverage
-bun test --coverage
-
-# Build the action
-bun run build
-```
-
-### Testing
-
-This project follows **Test-Driven Development (TDD)**:
-
-1. 🔴 **RED**: Write failing tests first
-2. 🟢 **GREEN**: Implement minimal code to pass tests
-3. 🔵 **REFACTOR**: Clean up and optimize code
-
-Run tests:
-
-```bash
-bun test                    # Run all tests
-bun test --watch           # Watch mode
-bun test --coverage        # With coverage report
-```
-
 ## 📄 License
 
-MIT © [yoshida_nao](https://github.com/70-10)
+MIT © [70-10](https://github.com/70-10)
 
 ## 🙏 Acknowledgments
 
