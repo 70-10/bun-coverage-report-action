@@ -91,25 +91,6 @@ async function parseLcovWithDALines(lcovData: string): Promise<JsonSummary> {
   return jsonSummary;
 }
 
-function convertRecordToReport(record: any): CoverageReport {
-  const linesTotal = record.lines?.found || 0;
-  const linesCovered = record.lines?.hit || 0;
-  const functionsTotal = record.functions?.found || 0;
-  const functionsCovered = record.functions?.hit || 0;
-  const branchesTotal = record.branches?.found || 0;
-  const branchesCovered = record.branches?.hit || 0;
-
-  // Extract uncovered lines
-  const uncoveredLines = extractUncoveredLines(record);
-
-  return {
-    lines: createReportNumbers(linesTotal, linesCovered),
-    statements: createReportNumbers(linesTotal, linesCovered), // LCOV doesn't distinguish lines from statements
-    functions: createReportNumbers(functionsTotal, functionsCovered),
-    branches: createReportNumbers(branchesTotal, branchesCovered),
-    uncoveredLines,
-  };
-}
 
 interface DALineData {
   lineNumber: number;

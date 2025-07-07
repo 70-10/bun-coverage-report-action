@@ -1,4 +1,4 @@
-import { describe, it, expect, mock } from "bun:test";
+import { describe, it, expect } from "bun:test";
 import { generateCoverageComment } from "../src/report/commentGenerator";
 import type { JsonSummary } from "../src/types/JsonSummary";
 

@@ -22,7 +22,7 @@ export async function run(): Promise<void> {
     try {
       await import("fs").then(fs => fs.promises.access(lcovPath));
       core.info(`✅ LCOV file found at: ${lcovPath}`);
-    } catch (error) {
+    } catch {
       core.error(`❌ LCOV file not found at: ${lcovPath}`);
       throw new Error(`LCOV file not found: ${lcovPath}. Please ensure 'bun test --coverage --coverage-reporter=lcov' was run successfully.`);
     }
