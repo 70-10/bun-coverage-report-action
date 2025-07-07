@@ -1,17 +1,18 @@
 {
   "name": "bun-coverage-report-action",
   "version": "1.0.3",
-  "description": "GitHub Action to generate coverage reports from Bun test LCOV output",
-  "main": "dist/index.js",
-  "type": "module",
   "private": true,
+  "description": "GitHub Action to generate coverage reports from Bun test LCOV output",
+  "type": "module",
+  "main": "dist/index.js",
   "scripts": {
     "test": "bun test",
     "test:coverage": "bun test --coverage --coverage-reporter=lcov --coverage-dir=coverage",
     "build": "bun run clean && bun run bundle",
     "bundle": "bun build src/index.ts --outfile=dist/index.js --target=node --minify",
     "clean": "rm -rf dist",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "lint": "oxlint"
   },
   "dependencies": {
     "@actions/core": "^1.10.1",
@@ -23,6 +24,7 @@
     "@types/bun": "latest",
     "@types/common-tags": "^1.8.4",
     "@types/lcov-parse": "^1.0.2",
+    "oxlint": "1.5.0",
     "typescript": "^5.8.3"
   },
   "engines": {
