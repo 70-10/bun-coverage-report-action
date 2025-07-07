@@ -49,7 +49,6 @@ export function checkCoverageThresholds(
 
   const totalThresholds = thresholdEntries.length;
   const failedThresholds = failures.length;
-  const passedThresholds = totalThresholds - failedThresholds;
 
   const summary = failedThresholds > 0 
     ? `${failedThresholds} of ${totalThresholds} thresholds failed`

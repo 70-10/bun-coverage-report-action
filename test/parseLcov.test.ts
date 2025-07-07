@@ -1,6 +1,5 @@
 import { describe, it, expect } from "bun:test";
 import { parseLcov } from "../src/inputs/parseLcov";
-import { readFileSync } from "fs";
 import { join } from "path";
 
 describe("parseLcov", () => {

@@ -28,6 +28,12 @@ jobs:
           bun install --frozen-lockfile
           echo "✅ Dependencies installed successfully"
       
+      - name: Run lint
+        run: |
+          echo "🔍 Running lint..."
+          bun run lint
+          echo "✅ Lint completed successfully"
+      
       - name: Run tests with coverage
         run: |
           echo "🧪 Running tests with coverage..."
